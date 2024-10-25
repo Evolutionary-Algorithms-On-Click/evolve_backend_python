@@ -17,6 +17,7 @@ app = FastAPI(
 )
 
 app.mount("/api/plots", StaticFiles(directory="plots"), name="plots")
+app.mount("/api/population", StaticFiles(directory="population"), name="population")
 
 app.include_router(apiRouter)
 

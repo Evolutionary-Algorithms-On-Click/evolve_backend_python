@@ -3,6 +3,7 @@ from deap import base, creator, tools, algorithms
 import numpy
 import matplotlib.pyplot as plt
 import os
+import pickle
 
 from evalFunctions import *
 
@@ -85,10 +86,25 @@ class Runner:
             halloffame=hof, 
             verbose=True
         )
+
+        self.storePopulation(pop)
         
-        return pop, logbook, hof
+        return logbook, hof
     
+
+    def storePopulation(self,pop):
+
+        os.makedirs(f"population/{self.id}/", exist_ok=True)
+        # Saving (Pickling) the list
+        with open(f"population/{self.id}/population.pkl", "wb") as f:
+            pickle.dump(pop, f)
+
+        # Loading (Unpickling) the list
+        # with open("large_list.pkl", "rb") as f:
+        #     loaded_list = pickle.load(f)
+
     
+
     def createPlot(self, gen, avg, min_, max_):
         plt.plot(gen, avg, label="average")
         plt.plot(gen, min_, label="minimum")
