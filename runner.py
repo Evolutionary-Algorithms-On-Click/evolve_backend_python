@@ -22,6 +22,9 @@ class Runner:
             individualSize=10,
             indpb=0.10,
             randomRange = [0, 100],
+            crossoverFunction="cxOnePoint",
+            mutationFunction="mutFlipBit",
+            selectionFunction="selTournament",
             tournamentSize=3
             ):
         
@@ -41,25 +44,17 @@ class Runner:
                 raise ValueError("Invalid individual type")
             
         
-        
-        match populationFunction:
-            case "initRepeat":
-                self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.attr, n=individualSize)
-            case "initIterate":
-                self.toolbox.register("individual", tools.initIterate, creator.Individual, self.toolbox.attr, n=individualSize)
-            case "initCycle":
-                self.toolbox.register("individual", tools.initCycle, creator.Individual, self.toolbox.attr, n=individualSize)
-            case _:
-                raise ValueError("Invalid population function")
+        self.toolbox.register("individual", getattr(tools, populationFunction), creator.Individual, self.toolbox.attr, n=individualSize)
 
         
-        self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
+        self.toolbox.register("population", getattr(tools, populationFunction), list, self.toolbox.individual)
 
         self.toolbox.register("evaluate", evalOneMax)
-        self.toolbox.register("mate", tools.cxTwoPoint)
-        self.toolbox.register("mutate", tools.mutFlipBit, indpb=indpb)
 
-        self.toolbox.register("select", getattr(tools, "selTournament"), tournsize=tournamentSize)
+        self.toolbox.register("mate", getattr(tools, crossoverFunction) )
+        self.toolbox.register("mutate", getattr(tools, mutationFunction), indpb=indpb)
+
+        self.toolbox.register("select", getattr(tools, selectionFunction), tournsize=tournamentSize)
 
 
     def run(
@@ -72,6 +67,7 @@ class Runner:
 
         pop = self.toolbox.population(n=poputlationSize)
         hof = tools.HallOfFame(1)
+        
         stats = tools.Statistics(lambda ind: ind.fitness.values)
         stats.register("avg", numpy.mean)
         stats.register("min", numpy.min)
@@ -96,7 +92,7 @@ class Runner:
     def storePopulation(self,pop):
 
         os.makedirs(f"population/{self.id}/", exist_ok=True)
-        # Saving (Pickling) the list
+        
         with open(f"population/{self.id}/population.pkl", "wb") as f:
             pickle.dump(pop, f)
 
@@ -104,18 +100,34 @@ class Runner:
         # with open("large_list.pkl", "rb") as f:
         #     loaded_list = pickle.load(f)
 
-    
+    def createPlots(self, logbook):
+        gen = logbook.select("gen")
+        avg = logbook.select("avg")
+        min_ = logbook.select("min")
+        max_ = logbook.select("max")
 
-    def createPlot(self, gen, avg, min_, max_):
+        os.makedirs(f"plots/{self.id}/", exist_ok=True)
+
+        self.createFitnessPlot(gen, avg, min_, max_)
+        self.createMutationCrossoverEffectPlot(gen, avg)
+
+    def createMutationCrossoverEffectPlot(self, gen, avg_fitness):
+        fitness_diff = [avg_fitness[i] - avg_fitness[i-1] for i in range(1, len(avg_fitness))]
+        plt.plot(gen[1:], fitness_diff, label="Fitness Change", color="purple")
+        plt.xlabel("Generation")
+        plt.ylabel("Fitness Change")
+        plt.title("Effect of Mutation and Crossover on Fitness")
+        plt.legend()
+        plt.savefig(f"plots/{self.id}/mutation_crossover_effect.png", dpi=300)
+        plt.close()
+
+    def createFitnessPlot(self, gen, avg, min_, max_):
         plt.plot(gen, avg, label="average")
         plt.plot(gen, min_, label="minimum")
         plt.plot(gen, max_, label="maximum")
         plt.xlabel("Generation")
         plt.ylabel("Fitness")
         plt.legend(loc="lower right")
-        
-        os.makedirs(f"plots/{self.id}/", exist_ok=True)
-        
         plt.savefig(f"plots/{self.id}/fitness_plot.png", dpi=300)  
         plt.close() 
         

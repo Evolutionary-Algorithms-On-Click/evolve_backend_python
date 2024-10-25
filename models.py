@@ -18,6 +18,10 @@ class RunAlgoModel(BaseModel):
     individualSize: int
     indpb: float
     randomRange: list
+    crossoverFunction: str
+    mutationFunction: str
+    selectionFunction: str
+    tournamentSize: int
 
 
 class UnpickleFileModel(BaseModel):

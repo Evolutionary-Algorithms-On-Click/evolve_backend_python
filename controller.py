@@ -44,34 +44,44 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
         weights=(1.0,),
         individualSize=10,
         indpb=0.10,
-        randomRange = [0, 100]
-        )
+        randomRange = [0, 100],
+        crossoverFunction="cxOnePoint",
+        mutationFunction="mutFlipBit",
+        selectionFunction="selTournament",
+        tournamentSize=3
+        )   
 
     log, hof = runner.run(
         poputlationSize=5000,
-        generations=10,
+        generations=30,
         cxpb=0.5,
         mutpb=0.2
     )
 
     print("Best individual is: %s\nwith fitness: %s" % (hof[0], hof[0].fitness))
+
+    runner.createPlots(log)
     
     gen, avg, min_, max_ = log.select("gen", "avg", "min", "max")
 
-    runner.createPlot(gen, avg, min_, max_)
-
-
     return JSONResponse(
         status_code=200,
-        content=jsonable_encoder({"message": "Run Algorithm", "data": {
-            "best": hof[0],
-            "generation": gen,
-            "average": avg,
-            "minimum": min_,
-            "maximum": max_,
-            "plot": f"{backend_url}/plots/{runner.id}/fitness_plot.png",
+        content=jsonable_encoder({
+            "message": "Run Algorithm", 
+            "runId": runner.id,
+            "data": {
+                "best": hof[0],
+                "generation": gen,
+                "average": avg,
+                "minimum": min_,
+                "maximum": max_,
+            },
+            "plots": {
+                "fitnessPlot": f"{backend_url}/plots/{runner.id}/fitness_plot.png",
+                "mutationCrossoverEffectPlot": f"{backend_url}/plots/{runner.id}/mutation_crossover_effect.png",
+            },
             "population": f"{backend_url}/population/{runner.id}/population.pkl"
-        }}),
+        }),
     )
 
 
