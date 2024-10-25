@@ -39,23 +39,23 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
     runner = Runner(id = str(uuid.uuid4()))
 
     runner.create(
-        individual = "binaryString",
-        populationFunction = "initRepeat",
-        weights=(1.0,),
-        individualSize=10,
-        indpb=0.10,
-        randomRange = [0, 100],
-        crossoverFunction="cxOnePoint",
-        mutationFunction="mutFlipBit",
-        selectionFunction="selTournament",
+        individual = runAlgoModel.individual,
+        populationFunction = runAlgoModel.populationFunction,
+        weights = runAlgoModel.weights,
+        individualSize = runAlgoModel.individualSize,
+        indpb = runAlgoModel.indpb,
+        randomRange = runAlgoModel.randomRange,
+        crossoverFunction = runAlgoModel.crossoverFunction,
+        mutationFunction = runAlgoModel.mutationFunction,
+        selectionFunction = runAlgoModel.selectionFunction,
         tournamentSize=3
         )   
 
     log, hof = runner.run(
-        poputlationSize=5000,
-        generations=30,
-        cxpb=0.5,
-        mutpb=0.2
+        poputlationSize = runAlgoModel.populationSize,
+        generations = runAlgoModel.generations,
+        cxpb = runAlgoModel.cxpb,
+        mutpb = runAlgoModel.mutpb
     )
 
     print("Best individual is: %s\nwith fitness: %s" % (hof[0], hof[0].fitness))

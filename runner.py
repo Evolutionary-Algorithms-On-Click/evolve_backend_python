@@ -54,7 +54,10 @@ class Runner:
         self.toolbox.register("mate", getattr(tools, crossoverFunction) )
         self.toolbox.register("mutate", getattr(tools, mutationFunction), indpb=indpb)
 
-        self.toolbox.register("select", getattr(tools, selectionFunction), tournsize=tournamentSize)
+        if selectionFunction == "selTournament":
+            self.toolbox.register("select", getattr(tools, selectionFunction), tournsize=tournamentSize)
+        else:
+            self.toolbox.register("select", getattr(tools, selectionFunction))
 
 
     def run(
@@ -92,7 +95,7 @@ class Runner:
     def storePopulation(self,pop):
 
         os.makedirs(f"population/{self.id}/", exist_ok=True)
-        
+
         with open(f"population/{self.id}/population.pkl", "wb") as f:
             pickle.dump(pop, f)
 
