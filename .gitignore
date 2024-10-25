@@ -20,3 +20,5 @@ site_build
 venv
 docs.zip
 archive.zip
+
+plots
