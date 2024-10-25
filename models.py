@@ -10,6 +10,7 @@ class RunAlgoModel(BaseModel):
     algorithm: str
     individual: str
     populationFunction: str
+    evaluationFunction: str
     populationSize: int
     generations: int
     cxpb: float
@@ -21,7 +22,9 @@ class RunAlgoModel(BaseModel):
     crossoverFunction: str
     mutationFunction: str
     selectionFunction: str
-    tournamentSize: int
+    tournamentSize: Optional[int] = None
+    mu: Optional[int] = None
+    lambda_: Optional[int] = None
 
 
 class UnpickleFileModel(BaseModel):

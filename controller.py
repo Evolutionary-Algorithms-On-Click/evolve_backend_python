@@ -41,6 +41,7 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
     runner.create(
         individual = runAlgoModel.individual,
         populationFunction = runAlgoModel.populationFunction,
+        evaluationFunction=runAlgoModel.evaluationFunction,
         weights = runAlgoModel.weights,
         individualSize = runAlgoModel.individualSize,
         indpb = runAlgoModel.indpb,
@@ -52,10 +53,14 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
         )   
 
     log, hof = runner.run(
+        algorithm = runAlgoModel.algorithm,
         poputlationSize = runAlgoModel.populationSize,
         generations = runAlgoModel.generations,
         cxpb = runAlgoModel.cxpb,
-        mutpb = runAlgoModel.mutpb
+        mutpb = runAlgoModel.mutpb,
+        mu = runAlgoModel.mu,
+        lambda_ = runAlgoModel.lambda_,
+        N = runAlgoModel.individualSize
     )
 
     print("Best individual is: %s\nwith fitness: %s" % (hof[0], hof[0].fitness))
