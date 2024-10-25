@@ -21,7 +21,8 @@ class Runner:
             weights=(1.0,),
             individualSize=10,
             indpb=0.10,
-            randomRange = [0, 100]
+            randomRange = [0, 100],
+            tournamentSize=3
             ):
         
         creator.create("FitnessMax", base.Fitness, weights=weights)
@@ -58,7 +59,7 @@ class Runner:
         self.toolbox.register("mate", tools.cxTwoPoint)
         self.toolbox.register("mutate", tools.mutFlipBit, indpb=indpb)
 
-        self.toolbox.register("select", tools.selTournament, tournsize=3)
+        self.toolbox.register("select", getattr(tools, "selTournament"), tournsize=tournamentSize)
 
 
     def run(

@@ -8,6 +8,16 @@ class rootRes(BaseModel):
 
 class RunAlgoModel(BaseModel):
     algorithm: str
+    individual: str
+    populationFunction: str
+    populationSize: int
+    generations: int
+    cxpb: float
+    mutpb: float
+    weights: tuple
+    individualSize: int
+    indpb: float
+    randomRange: list
 
 
 class UnpickleFileModel(BaseModel):
