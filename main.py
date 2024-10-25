@@ -1,15 +1,26 @@
 # main.py
 
 from fastapi import FastAPI
-from typing import Optional
-from pydantic import BaseModel
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
-class rootRes(BaseModel):
-    message: str
-    description: Optional[str] = None
-
-@app.get("/", response_model=rootRes)
+@app.get("/")
 async def root():
-    return rootRes(message="Hello World", description="This is a FastAPI example")
+    return JSONResponse(
+        status_code=200,
+        content=jsonable_encoder({"message": "Hello World"}),
+    )
+
+@app.get("/algorithm")
+async def algorithm():
+    return JSONResponse(
+        status_code=200,
+        content=jsonable_encoder({"message": "Algorithm", "data": [
+            {"name": "eaSimple", "type": "deap"},
+            {"name": "eaMuPlusLambda", "type": "deap"},
+            {"name": "eaMuCommaLambda", "type": "deap"},
+            {"name": "eaGenerateUpdate", "type": "deap"},
+        ]}),
+    )

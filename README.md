@@ -48,7 +48,3 @@ pip freeze > requirements.txt
 ```bash
 uvicorn main:app --reload
 ```
-
-
-
-
