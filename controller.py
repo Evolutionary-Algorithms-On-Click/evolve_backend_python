@@ -8,7 +8,7 @@ import os
 
 apiRouter = APIRouter(prefix="/api")
 
-backend_url = os.getenv('BASE_URL')+"/api"
+backend_url = os.getenv("BASE_URL", "http://localhost:8000") + "/api"
 
 @apiRouter.get("/test")
 async def root():

@@ -13,12 +13,44 @@ class Runner:
         self.id = id
 
 
-    def create(self, weights=(1.0,), individualSize=10, indpb=0.10):
+    def create(
+            self,
+            individual = "binaryString",
+            populationFunction = "initRepeat",
+            weights=(1.0,),
+            individualSize=10,
+            indpb=0.10,
+            randomRange = [0, 100]
+            ):
+        
         creator.create("FitnessMax", base.Fitness, weights=weights)
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
-        self.toolbox.register("attr_bool", random.randint, 0, 1)
-        self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.attr_bool, n=individualSize)
+        match individual:
+            case "binaryString":
+                self.toolbox.register("attr", random.randint, 0, 1)
+            case "permutation":
+                self.toolbox.register("attr", random.sample, range(individualSize), individualSize)
+            case "float":
+                self.toolbox.register("attr", random.uniform, randomRange[0], randomRange[1])
+            case "int":
+                self.toolbox.register("attr", random.randint, randomRange[0], randomRange[1])
+            case _:
+                raise ValueError("Invalid individual type")
+            
+        
+        
+        match populationFunction:
+            case "initRepeat":
+                self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.attr, n=individualSize)
+            case "initIterate":
+                self.toolbox.register("individual", tools.initIterate, creator.Individual, self.toolbox.attr, n=individualSize)
+            case "initCycle":
+                self.toolbox.register("individual", tools.initCycle, creator.Individual, self.toolbox.attr, n=individualSize)
+            case _:
+                raise ValueError("Invalid population function")
+
+        
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
 
         self.toolbox.register("evaluate", evalOneMax)
@@ -28,7 +60,14 @@ class Runner:
         self.toolbox.register("select", tools.selTournament, tournsize=3)
 
 
-    def run(self, poputlationSize=5000, generations=10, cxpb=0.5, mutpb=0.2):
+    def run(
+        self,
+        poputlationSize=5000,
+        generations=10,
+        cxpb=0.5,
+        mutpb=0.2
+        ):
+
         pop = self.toolbox.population(n=poputlationSize)
         hof = tools.HallOfFame(1)
         stats = tools.Statistics(lambda ind: ind.fitness.values)
@@ -48,6 +87,7 @@ class Runner:
         )
         
         return pop, logbook, hof
+    
     
     def createPlot(self, gen, avg, min_, max_):
         plt.plot(gen, avg, label="average")
