@@ -1,9 +1,10 @@
-from fastapi import File, UploadFile, HTTPException
+from fastapi import File, UploadFile, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter
 from models import *
 from runner import Runner
+from validator import validateRunAlgoRequest
 import uuid
 import os
 import pickle
@@ -33,7 +34,7 @@ async def algorithm():
     )
 
 
-@apiRouter.post("/runAlgo")
+@apiRouter.post("/runAlgo", dependencies=[Depends(validateRunAlgoRequest)])
 async def runAlgo(runAlgoModel: RunAlgoModel):
 
     runner = Runner(id = str(uuid.uuid4()))
