@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from models import *
 from runner import Runner
 from validator import validateRunAlgoRequest
+from config import ParamsList
 import uuid
 import os
 import pickle
@@ -14,6 +15,8 @@ apiRouter = APIRouter(prefix="/api")
 
 backend_url = os.getenv("BASE_URL", "http://localhost:8000") + "/api"
 
+paramsList = ParamsList()
+
 @apiRouter.get("/test")
 async def root():
     return JSONResponse(
@@ -21,16 +24,22 @@ async def root():
         content=jsonable_encoder({"message": "Hello World"}),
     )
 
-@apiRouter.get("/algorithm")
+@apiRouter.get("/validParams")
 async def algorithm():
     return JSONResponse(
         status_code=200,
-        content=jsonable_encoder({"message": "Algorithm", "data": [
-            {"name": "eaSimple", "type": "deap"},
-            {"name": "eaMuPlusLambda", "type": "deap"},
-            {"name": "eaMuCommaLambda", "type": "deap"},
-            {"name": "eaGenerateUpdate", "type": "deap"},
-        ]}),
+        content=jsonable_encoder(
+            {
+                "message": "Successfully fetched valid params", 
+                "algorithms": paramsList.algorithm,
+                "individual":paramsList.individual,
+                "populationFunction":paramsList.populationFunction,
+                "evaluationFunction":paramsList.evaluationFunction,
+                "crossoverFunction":paramsList.crossoverFunction,
+                "mutationFunction":paramsList.mutationFunction,
+                "selectionFunction":paramsList.selectionFunction
+            }
+        ),
     )
 
 
