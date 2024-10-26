@@ -9,8 +9,8 @@ import shutil
 from dotenv import load_dotenv
 load_dotenv()
 
-shutil.rmtree('plots/')
-shutil.rmtree('population/')
+# shutil.rmtree('plots/')
+# shutil.rmtree('population/')
 os.makedirs("plots/", exist_ok=True)
 os.makedirs("population/", exist_ok=True)
 

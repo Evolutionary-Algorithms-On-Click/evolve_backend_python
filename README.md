@@ -48,3 +48,16 @@ pip freeze > requirements.txt
 ```bash
 uvicorn main:app --reload
 ```
+
+7. To run in production.
+
+In Windows.
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
+In Linux.
+```bash
+gunicorn main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 -w 4
+```
+
