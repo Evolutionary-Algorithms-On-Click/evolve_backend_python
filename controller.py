@@ -54,16 +54,25 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
 
     log, hof = runner.run(
         algorithm = runAlgoModel.algorithm,
-        poputlationSize = runAlgoModel.populationSize,
+        populationSize = runAlgoModel.populationSize,
         generations = runAlgoModel.generations,
         cxpb = runAlgoModel.cxpb,
         mutpb = runAlgoModel.mutpb,
         mu = runAlgoModel.mu,
         lambda_ = runAlgoModel.lambda_,
-        N = runAlgoModel.individualSize
+        N = runAlgoModel.individualSize,
+        hofSize = runAlgoModel.hofSize
     )
 
     print("Best individual is: %s\nwith fitness: %s" % (hof[0], hof[0].fitness))
+
+    hofSerializable = [
+        {
+            "individual": list(ind), 
+            "fitness": ind.fitness.values if ind.fitness else None 
+        }
+        for ind in hof
+    ]
 
     runner.createPlots(log)
     
@@ -75,7 +84,6 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
             "message": "Run Algorithm", 
             "runId": runner.id,
             "data": {
-                "best": hof[0],
                 "generation": gen,
                 "average": avg,
                 "minimum": min_,
@@ -85,7 +93,8 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
                 "fitnessPlot": f"{backend_url}/plots/{runner.id}/fitness_plot.png",
                 "mutationCrossoverEffectPlot": f"{backend_url}/plots/{runner.id}/mutation_crossover_effect.png",
             },
-            "population": f"{backend_url}/population/{runner.id}/population.pkl"
+            "population": f"{backend_url}/population/{runner.id}/population.pkl",
+            "hallOfFame": hofSerializable
         }),
     )
 

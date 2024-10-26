@@ -25,7 +25,7 @@ class RunAlgoModel(BaseModel):
     tournamentSize: Optional[int] = None
     mu: Optional[int] = None
     lambda_: Optional[int] = None
-
+    hofSize: Optional[int] = 1
 
 class UnpickleFileModel(BaseModel):
     data: list

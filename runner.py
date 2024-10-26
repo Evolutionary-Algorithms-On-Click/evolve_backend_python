@@ -75,17 +75,18 @@ class Runner:
     def run(
         self,
         algorithm="eaSimple",
-        poputlationSize=5000,
+        populationSize=5000,
         generations=10,
         cxpb=0.5,
         mutpb=0.2,
         mu=1000,
         lambda_=4,
-        N = 10
+        N = 10,
+        hofSize = 1
         ):
 
-        pop = self.toolbox.population(n=poputlationSize)
-        hof = tools.HallOfFame(1)
+        pop = self.toolbox.population(n=populationSize)
+        hof = tools.HallOfFame(hofSize)
         
         stats = tools.Statistics(lambda ind: ind.fitness.values)
         stats.register("avg", numpy.mean)
