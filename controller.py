@@ -17,14 +17,20 @@ backend_url = os.getenv("BASE_URL", "http://localhost:8000") + "/api"
 
 paramsList = ParamsList()
 
-@apiRouter.get("/test")
+@apiRouter.get("/test",
+                summary="API Healthcheck", 
+                description="Returns a simple message to test the API Health."
+            )
 async def root():
     return JSONResponse(
         status_code=200,
         content=jsonable_encoder({"message": "Hello World"}),
     )
 
-@apiRouter.get("/validParams")
+@apiRouter.get("/validParams",
+                summary="Endpoint to fetch valid parameters", 
+                description="Returns the valid parameters for the algorithm."
+            )
 async def algorithm():
     return JSONResponse(
         status_code=200,
@@ -43,7 +49,10 @@ async def algorithm():
     )
 
 
-@apiRouter.post("/runAlgo", dependencies=[Depends(validateRunAlgoRequest)])
+@apiRouter.post("/runAlgo", 
+                dependencies=[Depends(validateRunAlgoRequest)],
+                summary="Endpoint to run the algorithm", 
+                description="Accepts the parameters required to run the algorithm and returns the results.")
 async def runAlgo(runAlgoModel: RunAlgoModel):
 
     runner = Runner(id = str(uuid.uuid4()))
