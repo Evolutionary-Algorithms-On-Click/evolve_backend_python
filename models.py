@@ -1,6 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 
+
 class rootRes(BaseModel):
     message: str
     description: Optional[str] = None
@@ -27,7 +28,12 @@ class RunAlgoModel(BaseModel):
     lambda_: Optional[int] = None
     hofSize: Optional[int] = 1
 
+
 class UnpickleFileModel(BaseModel):
     data: list
-    
 
+
+class RegisterUserModel(BaseModel):
+    userName: str
+    userEmail: str
+    password: str
