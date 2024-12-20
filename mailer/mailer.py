@@ -51,7 +51,6 @@ class Message:
         )
         self.message.attach(part)
 
-
 class Mailer:
     def __init__(self, host, port, sender_email, password):
         self.host = host
@@ -59,7 +58,15 @@ class Mailer:
         self.sender_email = sender_email
         self.password = password
         self.context = ssl.create_default_context()
-        self.server = smtplib.SMTP_SSL(self.host, self.port, context=self.context)
+
+        if port == '587':
+            self.server = smtplib.SMTP(self.host, self.port)
+            self.server.starttls(context=self.context)
+        elif port == '465':
+            self.server = smtplib.SMTP_SSL(self.host, self.port, context=self.context)
+        else:
+            raise ValueError("Unsupported port. Use 465 for SSL or 587 for STARTTLS.")
+
         self.server.login(self.sender_email, self.password)
 
     def sendMail(self, receiver_email, message):

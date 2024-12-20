@@ -8,7 +8,7 @@ import os
 
 connectionString = os.getenv(
     "DB_URL", "postgresql://postgres:password@localhost:5432/evolve"
-)
+) + os.getenv("DB_URL_PARAMS", "?sslmode=disable")
 
 databaseInstance = Database(connectionString)
 
