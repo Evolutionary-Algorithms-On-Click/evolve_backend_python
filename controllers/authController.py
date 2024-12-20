@@ -11,9 +11,7 @@ from mailer.mailSession import mailerInstance as mailer, MailMessage
 from utils.otpGenerator import generateOTP
 from utils.validator import *
 
-import uuid
 from models import *
-
 
 apiRouter = APIRouter(prefix="/api/auth")
 
@@ -73,18 +71,15 @@ async def register_user(user: RegisterUserModel):
 
         else:
 
-            id = uuid.uuid4()
-
-            await con.execute(
-                "INSERT INTO users (userId, userName, userEmail, password, accountStatus) VALUES ($1, $2, $3, $4, $5)",
-                id,
+            userId = await con.fetchval(
+                "INSERT INTO users (userId, userName, userEmail, password, accountStatus) VALUES (gen_random_uuid(), $1, $2, $3, $4) RETURNING userId",
                 user.userName.strip(),
                 user.userEmail.strip(),
                 user.password.strip(),
                 "REGISTERED",
             )
 
-            await con.execute("INSERT INTO otp (userId, otp) VALUES ($1, $2)", id, otp)
+            await con.execute("INSERT INTO otp (userId, otp) VALUES ($1, $2)", userId, otp)
 
         message = MailMessage(user.userEmail, "Registration successful", f"OTP is '{otp}'")
 
