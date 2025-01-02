@@ -128,7 +128,7 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
 
 
 @apiRouter.post(
-    "runGpAlgo",
+    "/runGpAlgo",
     summary="Endpoint to run GP algorithm",
     description="Accepts the parameters required to run the algorithm and returns the results.",
 )
