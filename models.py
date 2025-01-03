@@ -47,6 +47,7 @@ class RunGpAlgoModel(BaseModel):
     crossoverFunction: str
     terminalProb: float
     mutationFunction: str
+    mutationMode: str
     mateHeight: int
     mutHeight: int
     weights: tuple

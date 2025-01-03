@@ -22,6 +22,7 @@ const gpConfig = {
   "crossoverFunction": "cxOnePoint", // "cxSemantic" needs ['lf', 'mul', 'add', 'sub'] operators exactly.
   "terminalProb": 0.1, // Only when crossoverFunction is "cxOnePointLeafBiased". Max value is 0.2 that works well.
   "mutationFunction": "mutUniform",
+  "mutationMode": "one", // One of "one" or "all". Only when mutationFunction is "mutEphemeral".
   "mateHeight": 17,
   "mutHeight": 17,
   "weights": [

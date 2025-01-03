@@ -76,6 +76,7 @@ class GpRunner:
         crossoverFunction="cxOnePoint",
         terminalProb=0.1,
         mutationFunction="mutUniform",
+        mutationMode="one",
         mateHeight=17,
         mutHeight=17,
         weights=(-1.0,),
@@ -139,12 +140,48 @@ class GpRunner:
         self.toolbox.register(
             "expr_mut", getattr(gp, expr_mut), min_=expr_mut_min, max_=expr_mut_max
         )
-        self.toolbox.register(
-            "mutate",
-            getattr(gp, mutationFunction),
-            expr=self.toolbox.expr_mut,
-            pset=self.pset,
-        )
+
+        match mutationFunction:
+            case "mutUniform":
+                self.toolbox.register(
+                    "mutate",
+                    getattr(gp, mutationFunction),
+                    expr=self.toolbox.expr_mut,
+                    pset=self.pset,
+                )
+            case "mutShrink":
+                self.toolbox.register(
+                    "mutate",
+                    getattr(gp, mutationFunction),
+                )
+            case "mutNodeReplacement":
+                self.toolbox.register(
+                    "mutate",
+                    getattr(gp, mutationFunction),
+                    pset=self.pset,
+                )
+            case "mutInsert":
+                self.toolbox.register(
+                    "mutate",
+                    getattr(gp, mutationFunction),
+                    pset=self.pset,
+                )
+            
+            case "mutEphemeral":
+                self.toolbox.register(
+                    "mutate",
+                    getattr(gp, mutationFunction),
+                    mode=mutationMode,
+                )
+            case "mutSemantic":
+                self.toolbox.register(
+                    "mutate",
+                    getattr(gp, mutationFunction),
+                    gen_func=getattr(gp, expr_mut),
+                    pset=self.pset,
+                )
+            case _:
+                raise ValueError("Selected mutation function is not available")
 
         self.toolbox.decorate(
             "mate",

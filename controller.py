@@ -154,6 +154,7 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
         crossoverFunction=runGpAlgoModel.crossoverFunction,
         terminalProb=runGpAlgoModel.terminalProb,
         mutationFunction=runGpAlgoModel.mutationFunction,
+        mutationMode=runGpAlgoModel.mutationMode,
         mateHeight=runGpAlgoModel.mateHeight,
         mutHeight=runGpAlgoModel.mutHeight,
         weights=runGpAlgoModel.weights,
@@ -189,7 +190,7 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
             {
                 "message": "Run Algorithm",
                 "runId": runner.id,
-                "bestFitness": hof[0].fitness.values,
+                "bestFitness": str(hof[0].fitness.values),
                 "plots": {
                     "treePlot": f"{backend_url}/plots/{runner.id}/graph.png",
                 },
