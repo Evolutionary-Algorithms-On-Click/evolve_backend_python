@@ -45,6 +45,7 @@ class RunGpAlgoModel(BaseModel):
     tournamentSize: int
     expr_mut: str
     crossoverFunction: str
+    terminalProb: float
     mutationFunction: str
     mateHeight: int
     mutHeight: int

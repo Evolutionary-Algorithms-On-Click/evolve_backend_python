@@ -31,6 +31,7 @@ class GpRunner:
             "neg": {"operator": operator.neg, "arity": 1},
             "cos": {"operator": math.cos, "arity": 1},
             "sin": {"operator": math.sin, "arity": 1},
+            "lf": {"operator": Operators.lf, "arity": 1},
         }
 
     def addPrimitives(self, primitives):
@@ -73,6 +74,7 @@ class GpRunner:
         expr_mut_min=0,
         expr_mut_max=2,
         crossoverFunction="cxOnePoint",
+        terminalProb=0.1,
         mutationFunction="mutUniform",
         mateHeight=17,
         mutHeight=17,
@@ -115,7 +117,24 @@ class GpRunner:
         else:
             self.toolbox.register("select", getattr(tools, selectionFunction))
 
-        self.toolbox.register("mate", getattr(gp, crossoverFunction))
+        match crossoverFunction:
+            case "cxOnePoint":
+                self.toolbox.register("mate", getattr(gp, crossoverFunction))
+            case "cxOnePointLeafBiased":
+                self.toolbox.register(
+                    "mate",
+                    getattr(gp, crossoverFunction),
+                    termpb=terminalProb,
+                )
+            case "cxSemantic":
+                self.toolbox.register(
+                    "mate",
+                    getattr(gp, crossoverFunction),
+                    gen_func=getattr(gp, expr_mut),
+                    pset=self.pset,
+                )
+            case _:
+                raise ValueError("Selected crossover function is not available")
 
         self.toolbox.register(
             "expr_mut", getattr(gp, expr_mut), min_=expr_mut_min, max_=expr_mut_max

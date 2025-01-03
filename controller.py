@@ -152,6 +152,7 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
         tournamentSize=runGpAlgoModel.tournamentSize,
         expr_mut=runGpAlgoModel.expr_mut,
         crossoverFunction=runGpAlgoModel.crossoverFunction,
+        terminalProb=runGpAlgoModel.terminalProb,
         mutationFunction=runGpAlgoModel.mutationFunction,
         mateHeight=runGpAlgoModel.mateHeight,
         mutHeight=runGpAlgoModel.mutHeight,
