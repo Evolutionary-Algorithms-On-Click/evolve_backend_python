@@ -34,6 +34,5 @@ const gpConfig = {
   "mutpb": 0.1,
   "mu": 1000,
   "lambda_": 4,
-  "individualSize": 10,
   "hofSize": 1
 }
