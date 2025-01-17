@@ -13,7 +13,7 @@ from functools import partial
 from deap import algorithms, base, creator, tools, gp, cma
 
 from operators import Operators
-from evalFunctions import EvalFunctions
+from scoop import futures
 
 
 class GpRunner:
@@ -217,6 +217,9 @@ class GpRunner:
         mstats.register("std", numpy.std)
         mstats.register("min", numpy.min)
         mstats.register("max", numpy.max)
+
+        # Run the algorithm in parallel.
+        self.toolbox.register("map", futures.map)
 
         match algorithm:
             case "eaSimple":
