@@ -59,6 +59,8 @@ class RunGpAlgoModel(BaseModel):
     lambda_: int
     individualSize: int
     hofSize: int
+    expr_mut_min: int
+    expr_mut_max: int
 
 
 class UnpickleFileModel(BaseModel):

@@ -158,6 +158,8 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
         mateHeight=runGpAlgoModel.mateHeight,
         mutHeight=runGpAlgoModel.mutHeight,
         weights=runGpAlgoModel.weights,
+        expr_mut_min=runGpAlgoModel.expr_mut_min,
+        expr_mut_max=runGpAlgoModel.expr_mut_max,
     )
 
     log, hof = runner.run(
