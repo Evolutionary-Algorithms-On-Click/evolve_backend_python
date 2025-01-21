@@ -192,7 +192,13 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
     #     for ind in hof
     # ]
 
-    runner.createPlots(log)
+    runner.createPlots(log, hof)
+
+    runner.code.write("\n\n")
+    runner.code.write("if __name__ == '__main__':\n")
+    runner.code.write("\tmain()")
+
+    runner.code.close()
 
     return JSONResponse(
         status_code=200,
@@ -201,6 +207,7 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
                 "message": "Run Algorithm",
                 "runId": runner.id,
                 "bestFitness": str(hof[0].fitness.values),
+                "code": f"{backend_url}/code/{runner.id}.py",
                 "plots": {
                     "treePlot": f"{backend_url}/plots/{runner.id}/graph.png",
                 },
