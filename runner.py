@@ -7,6 +7,7 @@ import pickle
 from functools import partial
 
 from evalFunctions import EvalFunctions
+from scoop import futures
 
 class Runner:
 
@@ -92,6 +93,9 @@ class Runner:
         stats.register("avg", numpy.mean)
         stats.register("min", numpy.min)
         stats.register("max", numpy.max)
+        
+        # Run the algorithm in parallel.
+        self.toolbox.register("map", futures.map)
         
 
         match algorithm:
