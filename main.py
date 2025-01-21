@@ -3,7 +3,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from controller import apiRouter
 import os
-import shutil
 
 
 from dotenv import load_dotenv
@@ -14,6 +13,7 @@ load_dotenv()
 # shutil.rmtree("population/")
 os.makedirs("plots/", exist_ok=True)
 os.makedirs("population/", exist_ok=True)
+os.makedirs("code/", exist_ok=True)
 
 
 app = FastAPI(
@@ -35,5 +35,6 @@ app.add_middleware(
 
 app.mount("/api/plots", StaticFiles(directory="plots"), name="plots")
 app.mount("/api/population", StaticFiles(directory="population"), name="population")
+app.mount("/api/code", StaticFiles(directory="code"), name="code")
 
 app.include_router(apiRouter)

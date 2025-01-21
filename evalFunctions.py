@@ -44,4 +44,14 @@ class EvalFunctions:
     def evalFunction(individual, evalFunction, *args):
         return eval(evalFunction)(individual, *args)
     
+    def getCodeString(function):
+        match function:
+            case "evalOneMax":
+                return """def evalOneMax(individual):\n    return sum(individual),\n\n"""
+            case "evalProduct":
+                return """def evalProduct(individual):\n    return reduce(lambda x, y: x*y, individual),\n\n"""
+            case "evalDifference":
+                return """def evalDifference(individual):\n    return reduce(lambda x, y: x-y, individual),\n\n"""
+        
+        return None
     
