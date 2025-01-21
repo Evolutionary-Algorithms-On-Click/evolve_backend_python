@@ -91,6 +91,8 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
     )
 
     print("Best individual is: %s\nwith fitness: %s" % (hof[0], hof[0].fitness))
+    runner.code.write("\tprint(f'Best individual is: {hof[0]}\\nwith fitness: {hof[0].fitness}')")
+    runner.code.write("\n\n")
 
     hofSerializable = [
         {
@@ -101,6 +103,11 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
     ]
 
     runner.createPlots(log)
+
+    runner.code.write("\n\n")
+    runner.code.write("if __name__ == '__main__':\n")
+    runner.code.write("\tmain()")
+    runner.code.close()
 
     gen, avg, min_, max_ = log.select("gen", "avg", "min", "max")
 
@@ -120,6 +127,7 @@ async def runAlgo(runAlgoModel: RunAlgoModel):
                     "fitnessPlot": f"{backend_url}/plots/{runner.id}/fitness_plot.png",
                     "mutationCrossoverEffectPlot": f"{backend_url}/plots/{runner.id}/mutation_crossover_effect.png",
                 },
+                "code": f"{backend_url}/code/{runner.id}.py",
                 "population": f"{backend_url}/population/{runner.id}/population.pkl",
                 "hallOfFame": hofSerializable,
             }
