@@ -65,3 +65,33 @@ class RunGpAlgoModel(BaseModel):
 
 class UnpickleFileModel(BaseModel):
     data: list
+
+class MlModel(BaseModel):
+    algorithm: str # DONE
+    # individual: str
+    # populationFunction: str
+
+    # evaluationFunction: str
+    mlEvalFunctionCodeString: str # DONE
+
+    populationSize: int # DONE
+    generations: int # DONE
+    cxpb: float # DONE
+    mutpb: float # DONE
+    weights: tuple # DONE
+
+    # individualSize: int
+    googleDriveUrl: str # DONE
+    sep: str # DONE
+    mlImportCodeString: str # DONE
+    targetColumnName: str
+
+    indpb: float # DONE
+    crossoverFunction: str # DONE
+    mutationFunction: str # DONE
+    selectionFunction: str # DONE
+    tournamentSize: Optional[int] = None # DONE
+    mu: Optional[int] = None # DONE
+    lambda_: Optional[int] = None # DONE
+    hofSize: Optional[int] = 1 # DONE
+
