@@ -14,6 +14,7 @@ load_dotenv()
 os.makedirs("plots/", exist_ok=True)
 os.makedirs("population/", exist_ok=True)
 os.makedirs("code/", exist_ok=True)
+os.makedirs("ml/", exist_ok=True)
 
 
 app = FastAPI(
@@ -36,5 +37,6 @@ app.add_middleware(
 app.mount("/api/plots", StaticFiles(directory="plots"), name="plots")
 app.mount("/api/population", StaticFiles(directory="population"), name="population")
 app.mount("/api/code", StaticFiles(directory="code"), name="code")
+app.mount("/api/ml", StaticFiles(directory="ml"), name="ml")
 
 app.include_router(apiRouter)

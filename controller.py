@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from models import *
 from runner import Runner
 from gpRunner import GpRunner
+from mlRunner import MLRunner
 from validator import validateRunAlgoRequest
 from config import ParamsList
 import uuid
@@ -240,3 +241,74 @@ async def upload_file(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@apiRouter.post(
+    "/runMlAlgo",
+    response_model=MlModel,
+    summary="Run ML Algo to optimize hyperparameters with Genetic Algorithm",
+    description="Accepts the parameters required to run the algorithm and returns the results.",
+)
+async def runMlAlgo(mlModel: MlModel):
+    try:
+        runner = MLRunner(id=str(uuid.uuid4()), 
+                          sep=mlModel.sep,
+                          mlImportCodeString=mlModel.mlImportCodeString,
+                          evalFunctionCodeString=mlModel.mlEvalFunctionCodeString,)
+        
+        runner.create(
+            indpb=mlModel.indpb,
+            crossoverFunction=mlModel.crossoverFunction,
+            mutationFunction=mlModel.mutationFunction,
+            selectionFunction=mlModel.selectionFunction,
+            tournamentSize=mlModel.tournamentSize,
+        )
+
+        exitCode = runner.run(
+            algorithm=mlModel.algorithm,
+            googleDriveUrl=mlModel.googleDriveUrl,
+            targetColumnName=mlModel.targetColumnName,
+            weights=mlModel.weights,
+            populationSize=mlModel.populationSize,
+            generations=mlModel.generations,
+            cxpb=mlModel.cxpb,
+            mutpb=mlModel.mutpb,
+            mu=mlModel.mu,
+            lambda_=mlModel.lambda_,
+            hofSize=mlModel.hofSize,
+        )
+
+        if exitCode == 0:
+            return JSONResponse(
+                status_code=200,
+                content=jsonable_encoder(
+                    {
+                        "message": "Run Algorithm",
+                        "runId": runner.id,
+                        "code": f"{backend_url}/ml/{runner.id}/code.py",
+                        "best": f"{backend_url}/ml/{runner.id}/best.txt",
+                        "logbook": f"{backend_url}/ml/{runner.id}/logbook.txt",
+                        "plots": {
+                            "fitnessPlot": f"{backend_url}/ml/{runner.id}/fitness_plot.png",
+                        },
+                    }
+                ),
+            )
+        else:
+            return JSONResponse(
+                status_code=500,
+                content=jsonable_encoder(
+                    {
+                        "message": "Failed to run the algorithm. Please check the logs."
+                    }
+                ),
+            )
+
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder(
+                {
+                    "message": f"Failed to run the algorithm. Please check the logs. Error: {str(e)}"
+                }
+            ),
+        )
