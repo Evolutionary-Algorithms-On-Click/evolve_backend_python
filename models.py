@@ -84,7 +84,7 @@ class MlModel(BaseModel):
     googleDriveUrl: str # DONE
     sep: str # DONE
     mlImportCodeString: str # DONE
-    targetColumnName: str
+    targetColumnName: str # DONE
 
     indpb: float # DONE
     crossoverFunction: str # DONE

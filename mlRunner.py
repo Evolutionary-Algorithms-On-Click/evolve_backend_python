@@ -86,7 +86,7 @@ class MLRunner:
         self.code.write(f"\ty = df[target]\n")
 
         self.code.write(f"\n\taccuracy = mlEvalFunction([1 for _ in range(len(X.columns))], X, y)\n")
-        self.code.write(f"\tprint(\"No Feature Selection Accuracy: \", accuracy)\n")
+        # self.code.write(f"\tprint(\"No Feature Selection Accuracy: \", accuracy)\n")
 
         self.code.write(f"\n\tcreator.create(\"FitnessMax\", base.Fitness, weights={weights})\n")
         self.code.write("\tcreator.create(\"Individual\", list, fitness=creator.FitnessMax)\n")
@@ -133,10 +133,11 @@ class MLRunner:
                 raise ValueError("Algorithm not available")
         
         self.code.write("\tout_file = open(f\"{rootPath}/best.txt\", \"w\")\n")
-        self.code.write("\tout_file.write(f\"Best individual is: {hof[0]}\\nwith fitness: {hof[0].fitness}\")\n")
+        self.code.write("\tout_file.write(f\"Original Accuracy before applying EA: {accuracy}\\n\")\n")
+        self.code.write("\tout_file.write(f\"Best individual is:\\n{hof[0]}\\nwith fitness: {hof[0].fitness}\\n\")\n")
         self.code.write("\tbest_columns = [i for i in range(len(hof[0])) if hof[0][i] == 1]\n")
         self.code.write("\tbest_column_names = X.columns[best_columns]\n")
-        self.code.write("\tout_file.write(f\"Best individual columns: {best_column_names.values}\")\n")
+        self.code.write("\tout_file.write(f\"\\nBest individual columns:\\n{best_column_names.values}\")\n")
         self.code.write("\tout_file.close()\n")
 
         self.createPlots()
