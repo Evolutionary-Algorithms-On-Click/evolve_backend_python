@@ -150,7 +150,7 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
     runner.renameArguments(arg_names=runGpAlgoModel.argNames)
 
     runner.create(
-        individualType=runGpAlgoModel.individualType,
+        # individualType=runGpAlgoModel.individualType,
         expr=runGpAlgoModel.expr,
         min_=runGpAlgoModel.min_,
         max_=runGpAlgoModel.max_,
@@ -171,7 +171,7 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
         expr_mut_max=runGpAlgoModel.expr_mut_max,
     )
 
-    log, hof = runner.run(
+    exitCode = runner.run(
         algorithm=runGpAlgoModel.algorithm,
         populationSize=runGpAlgoModel.populationSize,
         generations=runGpAlgoModel.generations,
@@ -183,23 +183,15 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
         hofSize=runGpAlgoModel.hofSize,
     )
 
-    # print("Best individual is: %s\nwith fitness: %s" % (hof[0], hof[0].fitness))
-
-    # hofSerializable = [
-    #     {
-    #         "individual": list(ind),
-    #         "fitness": ind.fitness.values if ind.fitness else None,
-    #     }
-    #     for ind in hof
-    # ]
-
-    runner.createPlots(log, hof)
-
-    runner.code.write("\n\n")
-    runner.code.write("if __name__ == '__main__':\n")
-    runner.code.write("\tmain()")
-
-    runner.code.close()
+    if exitCode != 0:
+        return JSONResponse(
+            status_code=500,
+            content=jsonable_encoder(
+                {
+                    "message": "Failed to run the algorithm. Please check the logs."
+                }
+            ),
+        )
 
     return JSONResponse(
         status_code=200,
@@ -207,12 +199,13 @@ async def runGpAlgo(runGpAlgoModel: RunGpAlgoModel):
             {
                 "message": "Run Algorithm",
                 "runId": runner.id,
-                "bestFitness": str(hof[0].fitness.values),
-                "code": f"{backend_url}/code/{runner.id}.py",
+                "bestFitness": f"{backend_url}/gp/{runner.id}/best.txt",
+                "code": f"{backend_url}/gp/{runner.id}/code.py",
+                "logs": f"{backend_url}/gp/{runner.id}/logbook.txt",
                 "plots": {
-                    "treePlot": f"{backend_url}/plots/{runner.id}/graph.png",
+                    "treePlot": f"{backend_url}/gp/{runner.id}/graph.png",
                 },
-                "population": f"{backend_url}/population/{runner.id}/population.pkl",
+                # "population": f"{backend_url}/population/{runner.id}/population.pkl",
             }
         ),
     )
