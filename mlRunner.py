@@ -133,7 +133,7 @@ class MLRunner:
                 raise ValueError("Algorithm not available")
         
         self.code.write("\tout_file = open(f\"{rootPath}/best.txt\", \"w\")\n")
-        self.code.write("\tout_file.write(f\"Original Accuracy before applying EA: {accuracy}\\n\")\n")
+        self.code.write("\tout_file.write(f\"Before applying EA: {accuracy}\\n\")\n")
         self.code.write("\tout_file.write(f\"Best individual is:\\n{hof[0]}\\nwith fitness: {hof[0].fitness}\\n\")\n")
         self.code.write("\tbest_columns = [i for i in range(len(hof[0])) if hof[0][i] == 1]\n")
         self.code.write("\tbest_column_names = X.columns[best_columns]\n")
