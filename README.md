@@ -35,9 +35,24 @@ windows
 
 5. Install the dependencies
 
+macOS and Linux
 ```bash
 pip install -r requirements.txt
 ```
+
+Windows
+<br>
+> [!IMPORTANT]  
+> - `uvloop` library is not needed in Windows, It can be removed from `requirements.txt`.
+> - `pygraphviz` has some problems with windows so, [Refer for instructions](https://pygraphviz.github.io/documentation/stable/install.html).
+
+1. Install Visual C/C++ from [here](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+2. Download and install [Graphviz for Windows 10 (64-bit)](https://gitlab.com/graphviz/graphviz/-/package_files/6164164/download).
+3. Install PyGraphviz via
+```bash
+python -m pip install --config-settings="--global-option=build_ext" --config-settings="--global-option=-IC:\Program Files\Graphviz\include" --config-settings="--global-option=-LC:\Program Files\Graphviz\lib" pygraphviz
+```
+
 Update the requirements
 ```
 pip freeze > requirements.txt
